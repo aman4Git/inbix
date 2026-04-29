@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AIConfig extends Model
 {
+    protected $table = 'ai_configs';
+
     protected $fillable = [
         'provider',
         'max_tokens',

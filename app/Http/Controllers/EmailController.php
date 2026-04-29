@@ -21,6 +21,7 @@ class EmailController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Email queued for processing',
             'data'    => $email
         ]);
     }

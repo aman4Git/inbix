@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Email;
 use App\Models\AIConfig;
 use App\Factories\AIProviderFactory;
+use App\Jobs\ProcessEmailJob;
 
 class EmailService
 {
@@ -46,6 +47,10 @@ class EmailService
         } catch (\Throwable $e) {
             $email->update(['status' => 'failed']);
         }
+
+        // Dispatch job to queue
+        ProcessEmailJob::dispatch($email->id);
+
 
         return $email;
     }

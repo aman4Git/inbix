@@ -4,6 +4,7 @@ namespace App\Providers\AI;
 
 use App\Contracts\AIProviderInterface;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GeminiProvider implements AIProviderInterface
 {
@@ -18,7 +19,7 @@ class GeminiProvider implements AIProviderInterface
         ";
 
         $response = Http::post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" . config('services.gemini.key'),
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . config('services.gemini.key'),
             [
                 "contents" => [
                     [
@@ -30,7 +31,21 @@ class GeminiProvider implements AIProviderInterface
             ]
         );
 
-        $text = $response['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        Log::info('Gemini Raw Response', [
+            'response' => $response->json()
+        ]);
+
+        if (!$response->successful()) {
+            throw new \Exception('Gemini API failed: ' . $response->body());
+        }
+
+        $data = $response->json();
+
+        $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+        if (!$text) {
+            throw new \Exception('Empty response from Gemini');
+        }
 
         return [
             'text' => $text,
