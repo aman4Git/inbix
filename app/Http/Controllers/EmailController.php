@@ -12,7 +12,7 @@ class EmailController extends Controller
     public function respond(Request $request)
     {
         $validated = $request->validate([
-            'from_email' => 'nullable|email',
+            'from_email' => 'required|email',
             'subject'    => 'required|string',
             'body'       => 'required|string',
         ]);
@@ -21,7 +21,7 @@ class EmailController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Email queued for processing',
+            'message' => 'Email processed successfully',
             'data'    => $email
         ]);
     }

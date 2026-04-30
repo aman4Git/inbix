@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Models\Email;
 use App\Models\AIConfig;
 use App\Factories\AIProviderFactory;
-use App\Jobs\ProcessEmailJob;
+use App\Mail\AIReplyMail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EmailService
 {
@@ -44,13 +46,21 @@ class EmailService
                 'tokens_used' => $result['tokens']
             ]);
 
+            if ($email->from_email) {
+                Mail::to($email->from_email)->send(new AIReplyMail($email));
+            }
+
         } catch (\Throwable $e) {
+            Log::error('Email processing failed', [
+                'email_id' => $email->id,
+                'from_email' => $email->from_email,
+                'error' => $e->getMessage(),
+            ]);
+
             $email->update(['status' => 'failed']);
+
+            throw $e;
         }
-
-        // Dispatch job to queue
-        ProcessEmailJob::dispatch($email->id);
-
 
         return $email;
     }
