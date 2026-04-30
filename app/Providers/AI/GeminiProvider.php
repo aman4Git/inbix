@@ -27,7 +27,11 @@ class GeminiProvider implements AIProviderInterface
                             ["text" => $prompt]
                         ]
                     ]
-                ]
+                ],
+                "generationConfig" => [
+                    "temperature"     => (float) $config['temperature'],
+                    "maxOutputTokens" => (int) $config['max_tokens'],
+                ],
             ]
         );
 
@@ -48,8 +52,8 @@ class GeminiProvider implements AIProviderInterface
         }
 
         return [
-            'text' => $text,
-            'tokens' => strlen($text)
+            'text'   => $text,
+            'tokens' => (int) ($data['usageMetadata']['totalTokenCount'] ?? 0),
         ];
     }
 }

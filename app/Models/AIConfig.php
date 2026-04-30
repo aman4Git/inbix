@@ -15,4 +15,10 @@ class AIConfig extends Model
         'tone',
         'is_active'
     ];
+
+    protected $casts = [
+        'max_tokens'  => 'integer',
+        'temperature' => 'float',
+        'is_active'   => 'boolean',
+    ];
 }

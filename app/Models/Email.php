@@ -15,4 +15,8 @@ class Email extends Model
         'provider',
         'tokens_used'
     ];
+
+    protected $casts = [
+        'tokens_used' => 'integer',
+    ];
 }

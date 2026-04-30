@@ -2,23 +2,19 @@
 
 namespace App\Mail;
 
+use App\Models\Email;
 use Illuminate\Mail\Mailable;
 
 class AIReplyMail extends Mailable
 {
-    public $email;
+    public function __construct(public Email $email) {}
 
-    public function __construct($email)
-    {
-        $this->email = $email;
-    }
-
-    public function build()
+    public function build(): self
     {
         return $this->subject('Re: ' . $this->email->subject)
             ->view('emails.reply')
             ->with([
-                'content' => $this->email->ai_response
+                'content' => $this->email->ai_response,
             ]);
     }
 }

@@ -25,7 +25,7 @@ class EmailService
 
             $config = AIConfig::where('is_active', true)->first();
 
-            $providerName = $config->provider ?? config('ai.provider');
+            $providerName = $config?->provider ?? config('ai.provider');
 
             $provider = AIProviderFactory::make($providerName);
 
@@ -33,9 +33,9 @@ class EmailService
                 $email->subject,
                 $email->body,
                 [
-                    'tone'        => $config->tone ?? config('ai.tone'),
-                    'max_tokens'  => $config->max_tokens ?? config('ai.max_tokens'),
-                    'temperature' => $config->temperature ?? config('ai.temperature'),
+                    'tone'        => $config?->tone ?? config('ai.tone'),
+                    'max_tokens'  => $config?->max_tokens ?? config('ai.max_tokens'),
+                    'temperature' => $config?->temperature ?? config('ai.temperature'),
                 ]
             );
 
